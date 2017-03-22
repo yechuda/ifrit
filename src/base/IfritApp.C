@@ -4,6 +4,18 @@
 #include "ModulesApp.h"
 #include "MooseSyntax.h"
 
+// Kernels
+#include "ElectricalConduction.h"
+#include "SeebeckEffect.h"
+#include "HeatDiffusion.h"
+#include "PeltierThomsonEffect.h"
+#include "JouleHeating.h"
+
+// Materials
+#include "p_type.h"
+#include "n_type.h"
+#include "copper.h"
+
 template<>
 InputParameters validParams<IfritApp>()
 {
@@ -40,6 +52,17 @@ extern "C" void IfritApp__registerObjects(Factory & factory) { IfritApp::registe
 void
 IfritApp::registerObjects(Factory & factory)
 {
+  // Kernels
+  registerKernel(ElectricalConduction);
+  registerKernel(SeebeckEffect);
+  registerKernel(HeatDiffusion);
+  registerKernel(PeltierThomsonEffect);
+  registerKernel(JouleHeating);
+
+  // Materials
+  registerMaterial(p_type);
+  registerMaterial(n_type);
+  registerMaterial(copper);
 }
 
 // External entry point for dynamic syntax association

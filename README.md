@@ -1,6 +1,6 @@
 Ifrit
 =====
 
-"Fork Ifrit" to create a new MOOSE-based application.
+MOOSE-based application
 
-For more information see: [http://mooseframework.org/create-an-app/](http://mooseframework.org/create-an-app/)
+[http://mooseframework.org](http://mooseframework.org)
