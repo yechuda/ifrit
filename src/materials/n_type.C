@@ -39,7 +39,7 @@ n_type::n_type(const InputParameters & parameters) :
 void
 n_type::computeQpProperties()
 {
-  Real T0 = 300;
+  Real T0 = 300.0;
 
   Real rho0 = 8.239e-06;
   Real B1 = 4.7e-03;

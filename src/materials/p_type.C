@@ -39,7 +39,7 @@ p_type::p_type(const InputParameters & parameters) :
 void
 p_type::computeQpProperties()
 {
-  Real T0 = 300;
+  Real T0 = 300.0;
 
   Real rho0 = 8.826e-06;
   Real B1 = 5.88e-03;
