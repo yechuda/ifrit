@@ -70,7 +70,7 @@
     type = DirichletBC
     variable = voltage
     boundary = 'supply_terminal'
-    value = 0.1
+    value = 0.0874
   [../]
 
   [./ground_terminal_voltage]
@@ -84,14 +84,14 @@
     type = DirichletBC
     variable = temperature
     boundary = 'top'
-    value = 273.15
+    value = 280.15
   [../]
 
   [./bottom_temperature]
     type = DirichletBC
     variable = temperature
     boundary = 'bottom'
-    value = 293.15
+    value = 298.15
   [../]
 []
 
@@ -123,6 +123,29 @@
   nl_max_its = 50
   l_tol = 1.0e-09
   l_max_its = 500
+[]
+
+[Postprocessors]
+  [./hot_flux]
+    type = SideFluxIntegral
+    variable = temperature
+    boundary = 'bottom'
+    diffusivity = lambda
+  [../]
+
+  [./cold_flux]
+    type = SideFluxIntegral
+    variable = temperature
+    boundary = 'top'
+    diffusivity = lambda
+  [../]
+
+  [./current]
+    type = CurrentPostprocessor
+    variable = voltage
+    boundary = 'supply_terminal'
+    temperature =  temperature
+  [../]
 []
 
 [Outputs]

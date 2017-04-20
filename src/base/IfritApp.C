@@ -16,6 +16,9 @@
 #include "n_type.h"
 #include "copper.h"
 
+// Postprocessors
+#include "CurrentPostprocessor.h"
+
 template<>
 InputParameters validParams<IfritApp>()
 {
@@ -63,6 +66,9 @@ IfritApp::registerObjects(Factory & factory)
   registerMaterial(p_type);
   registerMaterial(n_type);
   registerMaterial(copper);
+
+  // Postprocessors
+  registerPostprocessor(CurrentPostprocessor);
 }
 
 // External entry point for dynamic syntax association

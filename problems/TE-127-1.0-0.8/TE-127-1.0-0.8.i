@@ -1,5 +1,5 @@
 [Mesh]
-  file = /home/yechuda/projects/ifrit/problems/cell/cell.e
+  file = /home/yechuda/projects/ifrit/problems/TE-127-1.0-0.8/TE-127-1.0-0.8.e
 []
 
 [Variables]
@@ -12,7 +12,7 @@
   [./temperature]
     order = FIRST
     family = LAGRANGE
-    initial_condition = 273.15
+    initial_condition = 283.15
   [../]
 []
 
@@ -70,7 +70,7 @@
     type = DirichletBC
     variable = voltage
     boundary = 'supply_terminal'
-    value = 0.1
+    value = 0.094488
   [../]
 
   [./ground_terminal_voltage]
@@ -84,14 +84,14 @@
     type = DirichletBC
     variable = temperature
     boundary = 'top'
-    value = 273.15
+    value = 283.15
   [../]
 
   [./bottom_temperature]
     type = DirichletBC
     variable = temperature
-    boundary = 'bottom'
-    value = 293.15
+    boundary = 'bottom_left bottom_right'
+    value = 303.15
   [../]
 []
 
@@ -123,6 +123,36 @@
   nl_max_its = 50
   l_tol = 1.0e-09
   l_max_its = 500
+[]
+
+[Postprocessors]
+  [./hot_flux_left]
+    type = SideFluxIntegral
+    variable = temperature
+    boundary = 'bottom_left'
+    diffusivity = lambda
+  [../]
+
+  [./hot_flux_right]
+    type = SideFluxIntegral
+    variable = temperature
+    boundary = 'bottom_right'
+    diffusivity = lambda
+  [../]
+
+  [./cold_flux]
+    type = SideFluxIntegral
+    variable = temperature
+    boundary = 'top'
+    diffusivity = lambda
+  [../]
+
+  [./current]
+    type = CurrentPostprocessor
+    variable = voltage
+    boundary = 'supply_terminal'
+    temperature =  temperature
+  [../]
 []
 
 [Outputs]
