@@ -12,40 +12,31 @@
 /*            See COPYRIGHT for full restrictions               */
 /****************************************************************/
 
-#include "copper.h"
+#ifndef PELTIERTHOMSONEFFECTEXPLICIT_H
+#define PELTIERTHOMSONEFFECTEXPLICIT_H
+
+#include "Kernel.h"
+
+class PeltierThomsonEffectExplicit;
 
 template<>
-InputParameters validParams<copper>()
+InputParameters validParams<PeltierThomsonEffectExplicit>();
+
+class PeltierThomsonEffectExplicit : public Kernel
 {
-  InputParameters params = validParams<Material>();
+public:
+  PeltierThomsonEffectExplicit(const InputParameters & parameters);
 
-  return params;
-}
+protected:
+  virtual Real computeQpResidual();
+  virtual Real computeQpJacobian();
+  virtual Real computeQpOffDiagJacobian(unsigned jvar);
 
-copper::copper(const InputParameters & parameters) :
-    Material(parameters),
+  const VariableGradient & _grad_voltage;
+  unsigned _voltage_var;
+  const MaterialProperty<Real> & _sigma;
+  const MaterialProperty<Real> & _alpha;
+  const MaterialProperty<Real> & _d_alpha_d_T;
+};
 
-    _sigma(declareProperty<Real>("sigma")),
-    _lambda(declareProperty<Real>("lambda")),
-    _alpha(declareProperty<Real>("alpha")),
-    _grad_alpha(declareProperty<RealGradient>("grad_alpha")),
-    _d_alpha_d_T(declareProperty<Real>("d_alpha_d_T")),
-
-    _zero_gradient(_grad_zero)
-
-{}
-
-void
-copper::computeQpProperties()
-{
-  Real rho = 1.7e-09;
-  _sigma[_qp] = 1.0 / rho;
-
-  _lambda[_qp] = 400.0;
-
-  _alpha[_qp] = 6.5e-06;
-
-  _grad_alpha[_qp] = _zero_gradient[_qp];
-
-  _d_alpha_d_T[_qp] = 0.0;
-}
+#endif //PELTIERTHOMSONEFFECTEXPLICIT_H

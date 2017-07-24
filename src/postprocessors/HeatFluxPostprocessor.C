@@ -12,27 +12,30 @@
 /*            See COPYRIGHT for full restrictions               */
 /****************************************************************/
 
-#include "CurrentPostprocessor.h"
+#include "HeatFluxPostprocessor.h"
 
-template<>
-InputParameters validParams<CurrentPostprocessor>()
+template <>
+InputParameters
+validParams<HeatFluxPostprocessor>()
 {
   InputParameters params = validParams<SideIntegralVariablePostprocessor>();
+  params.addRequiredParam<std::string>("thermal_conductivity", "The name of the thermal conductivity material property that will be used in the flux computation.");
+  params.addRequiredParam<Real>("pair_number", "The number of thermoelectric pairs in TE module.");
   params.addRequiredParam<Real>("z_dim", "Perpendicular dimension");
-  params.addRequiredCoupledVar("temperature", "The coupled variable of temperature");
   return params;
 }
 
-CurrentPostprocessor::CurrentPostprocessor(const InputParameters & parameters) :
-    SideIntegralVariablePostprocessor(parameters),
-    _z_dim(getParam<Real>("z_dim")),
-    _grad_temperature(coupledGradient("temperature")),
-    _sigma(getMaterialProperty<Real>("sigma")),
-    _alpha(getMaterialProperty<Real>("alpha"))
-{}
+HeatFluxPostprocessor::HeatFluxPostprocessor(const InputParameters & parameters)
+  : SideIntegralVariablePostprocessor(parameters),
+    _conductivity(parameters.get<std::string>("thermal_conductivity")),
+    _cond_coef(getMaterialProperty<Real>(_conductivity)),
+    _pair_number(getParam<Real>("pair_number")),
+    _z_dim(getParam<Real>("z_dim"))
+{
+}
 
 Real
-CurrentPostprocessor::computeQpIntegral()
+HeatFluxPostprocessor::computeQpIntegral()
 {
-  return -_z_dim * _sigma[_qp] * (_grad_u[_qp] + _alpha[_qp] * _grad_temperature[_qp]) * _normals[_qp];
+  return -_pair_number * _z_dim * _cond_coef[_qp] * _grad_u[_qp] * _normals[_qp];
 }

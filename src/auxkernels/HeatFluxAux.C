@@ -11,41 +11,29 @@
 /*                                                              */
 /*            See COPYRIGHT for full restrictions               */
 /****************************************************************/
+#include "HeatFluxAux.h"
 
-#include "copper.h"
-
-template<>
-InputParameters validParams<copper>()
+template <>
+InputParameters
+validParams<HeatFluxAux>()
 {
-  InputParameters params = validParams<Material>();
-
+  InputParameters params = validParams<AuxKernel>();
+  params.addRequiredCoupledVar("temperature", "Temperature variable.");
+  params.addRequiredParam<std::string>("heat_conductivity", "The name of the heat conductivity material property that will be used in the flux computation.");
+  params.addParam<int>("component", 0, "The flux component you want to see.");
   return params;
 }
 
-copper::copper(const InputParameters & parameters) :
-    Material(parameters),
-
-    _sigma(declareProperty<Real>("sigma")),
-    _lambda(declareProperty<Real>("lambda")),
-    _alpha(declareProperty<Real>("alpha")),
-    _grad_alpha(declareProperty<RealGradient>("grad_alpha")),
-    _d_alpha_d_T(declareProperty<Real>("d_alpha_d_T")),
-
-    _zero_gradient(_grad_zero)
-
-{}
-
-void
-copper::computeQpProperties()
+HeatFluxAux::HeatFluxAux(const InputParameters & parameters)
+  : AuxKernel(parameters),
+    _grad_T(coupledGradient("temperature")),
+    _heat_conductivity(parameters.get<std::string>("heat_conductivity")),
+    _conductivity_coef(getMaterialProperty<Real>(_heat_conductivity)),
+    _component(getParam<int>("component"))
 {
-  Real rho = 1.7e-09;
-  _sigma[_qp] = 1.0 / rho;
+}
 
-  _lambda[_qp] = 400.0;
-
-  _alpha[_qp] = 6.5e-06;
-
-  _grad_alpha[_qp] = _zero_gradient[_qp];
-
-  _d_alpha_d_T[_qp] = 0.0;
+Real HeatFluxAux::computeValue()
+{
+  return -_conductivity_coef[_qp] * _grad_T[_qp](_component);
 }

@@ -11,41 +11,29 @@
 /*                                                              */
 /*            See COPYRIGHT for full restrictions               */
 /****************************************************************/
+#ifndef HEATFLUXAUX_H
+#define HEATFLUXAUX_H
 
-#include "copper.h"
+#include "AuxKernel.h"
 
-template<>
-InputParameters validParams<copper>()
+class HeatFluxAux;
+
+template <>
+InputParameters validParams<HeatFluxAux>();
+
+class HeatFluxAux : public AuxKernel
 {
-  InputParameters params = validParams<Material>();
+public:
+  HeatFluxAux(const InputParameters & parameters);
 
-  return params;
-}
+protected:
+  virtual Real computeValue();
 
-copper::copper(const InputParameters & parameters) :
-    Material(parameters),
+private:
+  const VariableGradient & _grad_T;
+  std::string _heat_conductivity;
+  const MaterialProperty<Real> & _conductivity_coef;
+  const int _component;
+};
 
-    _sigma(declareProperty<Real>("sigma")),
-    _lambda(declareProperty<Real>("lambda")),
-    _alpha(declareProperty<Real>("alpha")),
-    _grad_alpha(declareProperty<RealGradient>("grad_alpha")),
-    _d_alpha_d_T(declareProperty<Real>("d_alpha_d_T")),
-
-    _zero_gradient(_grad_zero)
-
-{}
-
-void
-copper::computeQpProperties()
-{
-  Real rho = 1.7e-09;
-  _sigma[_qp] = 1.0 / rho;
-
-  _lambda[_qp] = 400.0;
-
-  _alpha[_qp] = 6.5e-06;
-
-  _grad_alpha[_qp] = _zero_gradient[_qp];
-
-  _d_alpha_d_T[_qp] = 0.0;
-}
+#endif // HEATFLUXAUX_H

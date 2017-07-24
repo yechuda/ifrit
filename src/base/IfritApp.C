@@ -9,7 +9,11 @@
 #include "SeebeckEffect.h"
 #include "HeatDiffusion.h"
 #include "PeltierThomsonEffect.h"
+#include "PeltierThomsonEffectExplicit.h"
 #include "JouleHeating.h"
+
+// AuxKernels
+#include "HeatFluxAux.h"
 
 // Materials
 #include "p_type.h"
@@ -18,6 +22,7 @@
 
 // Postprocessors
 #include "CurrentPostprocessor.h"
+#include "HeatFluxPostprocessor.h"
 
 template<>
 InputParameters validParams<IfritApp>()
@@ -61,6 +66,10 @@ IfritApp::registerObjects(Factory & factory)
   registerKernel(HeatDiffusion);
   registerKernel(PeltierThomsonEffect);
   registerKernel(JouleHeating);
+  registerKernel(PeltierThomsonEffectExplicit);
+
+  // AuxKernels
+  registerAux(HeatFluxAux);
 
   // Materials
   registerMaterial(p_type);
@@ -69,6 +78,7 @@ IfritApp::registerObjects(Factory & factory)
 
   // Postprocessors
   registerPostprocessor(CurrentPostprocessor);
+  registerPostprocessor(HeatFluxPostprocessor);
 }
 
 // External entry point for dynamic syntax association

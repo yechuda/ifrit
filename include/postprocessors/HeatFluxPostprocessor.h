@@ -12,40 +12,30 @@
 /*            See COPYRIGHT for full restrictions               */
 /****************************************************************/
 
-#include "copper.h"
+#ifndef HEATFLUXPOSTPROCESSOR_H
+#define HEATFLUXPOSTPROCESSOR_H
 
-template<>
-InputParameters validParams<copper>()
+// MOOSE includes
+#include "SideIntegralVariablePostprocessor.h"
+
+// Forward Declarations
+class HeatFluxPostprocessor;
+
+template <>
+InputParameters validParams<HeatFluxPostprocessor>();
+
+class HeatFluxPostprocessor : public SideIntegralVariablePostprocessor
 {
-  InputParameters params = validParams<Material>();
+public:
+  HeatFluxPostprocessor(const InputParameters & parameters);
 
-  return params;
-}
+protected:
+  virtual Real computeQpIntegral() override;
 
-copper::copper(const InputParameters & parameters) :
-    Material(parameters),
+  std::string _conductivity;
+  const MaterialProperty<Real> & _cond_coef;
+  const Real _pair_number;
+  const Real _z_dim;
+};
 
-    _sigma(declareProperty<Real>("sigma")),
-    _lambda(declareProperty<Real>("lambda")),
-    _alpha(declareProperty<Real>("alpha")),
-    _grad_alpha(declareProperty<RealGradient>("grad_alpha")),
-    _d_alpha_d_T(declareProperty<Real>("d_alpha_d_T")),
-
-    _zero_gradient(_grad_zero)
-
-{}
-
-void
-copper::computeQpProperties()
-{
-  Real rho = 1.7e-09;
-  _sigma[_qp] = 1.0 / rho;
-
-  _lambda[_qp] = 400.0;
-
-  _alpha[_qp] = 6.5e-06;
-
-  _grad_alpha[_qp] = _zero_gradient[_qp];
-
-  _d_alpha_d_T[_qp] = 0.0;
-}
+#endif // HEATFLUXPOSTPROCESSOR_H

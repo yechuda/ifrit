@@ -32,6 +32,7 @@ public:
 protected:
   virtual Real computeQpIntegral();
 
+  const Real _z_dim;
   const VariableGradient & _grad_temperature;
   const MaterialProperty<Real> & _sigma;
   const MaterialProperty<Real> & _alpha;
