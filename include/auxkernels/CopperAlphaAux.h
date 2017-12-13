@@ -11,38 +11,26 @@
 /*                                                              */
 /*            See COPYRIGHT for full restrictions               */
 /****************************************************************/
+#ifndef COPPERALPHAAUX_H
+#define COPPERALPHAAUX_H
 
-#ifndef PELTIERTHOMSONEFFECTEXPLICIT_H
-#define PELTIERTHOMSONEFFECTEXPLICIT_H
+#include "AuxKernel.h"
 
-#include "Kernel.h"
+class CopperAlphaAux;
 
-class PeltierThomsonEffectExplicit;
+template <>
+InputParameters validParams<CopperAlphaAux>();
 
-template<>
-InputParameters validParams<PeltierThomsonEffectExplicit>();
-
-class PeltierThomsonEffectExplicit : public Kernel
+class CopperAlphaAux : public AuxKernel
 {
 public:
-  PeltierThomsonEffectExplicit(const InputParameters & parameters);
+  CopperAlphaAux(const InputParameters & parameters);
 
 protected:
-  virtual Real computeQpResidual();
-  virtual Real computeQpJacobian();
-  virtual Real computeQpOffDiagJacobian(unsigned jvar);
+  virtual Real computeValue();
 
-  const VariableGradient & _grad_voltage;
-  unsigned _voltage_var;
-  const MaterialProperty<Real> & _sigma;
-  const VariableValue & _alpha;
-  const VariableValue & _grad_alpha_x;
-  const VariableValue & _grad_alpha_y;
-  const VariableValue & _grad_alpha_z;
-  unsigned _alpha_var;
-  unsigned _grad_alpha_x_var;
-  unsigned _grad_alpha_y_var;
-  unsigned _grad_alpha_z_var;
+private:
+
 };
 
-#endif //PELTIERTHOMSONEFFECTEXPLICIT_H
+#endif // COPPERALPHAAUX_H

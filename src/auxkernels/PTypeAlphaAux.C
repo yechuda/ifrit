@@ -11,41 +11,28 @@
 /*                                                              */
 /*            See COPYRIGHT for full restrictions               */
 /****************************************************************/
+#include "PTypeAlphaAux.h"
 
-#include "copper.h"
-
-template<>
-InputParameters validParams<copper>()
+template <>
+InputParameters
+validParams<PTypeAlphaAux>()
 {
-  InputParameters params = validParams<Material>();
-
+  InputParameters params = validParams<AuxKernel>();
+  params.addRequiredCoupledVar("temperature", "Temperature variable.");
   return params;
 }
 
-copper::copper(const InputParameters & parameters) :
-    Material(parameters),
-
-    _sigma(declareProperty<Real>("sigma")),
-    _lambda(declareProperty<Real>("lambda")),
-    _alpha(declareProperty<Real>("alpha")),
-    _grad_alpha(declareProperty<RealGradient>("grad_alpha")),
-    _d_alpha_d_T(declareProperty<Real>("d_alpha_d_T")),
-
-    _zero_gradient(_grad_zero)
-
-{}
-
-void
-copper::computeQpProperties()
+PTypeAlphaAux::PTypeAlphaAux(const InputParameters & parameters)
+  : AuxKernel(parameters),
+    _temperature(coupledValue("temperature"))
 {
-  Real rho = 1.7e-08;
-  _sigma[_qp] = 1.0 / rho;
+}
 
-  _lambda[_qp] = 400.0;
-
-  _alpha[_qp] = 6.5e-06;
-
-  _grad_alpha[_qp] = _zero_gradient[_qp];
-
-  _d_alpha_d_T[_qp] = 0.0;
+Real PTypeAlphaAux::computeValue()
+{
+  Real T0 = 300.0;
+  Real alpha0 = 2.207e-04;
+  Real C1 = 1.55e-03;
+  Real C2 = -3.15e-06;
+  return alpha0 * (1.0 + C1 * (_temperature[_qp] - T0) + C2 * std::pow(_temperature[_qp] - T0, 2.0));
 }

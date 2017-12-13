@@ -12,37 +12,33 @@
 /*            See COPYRIGHT for full restrictions               */
 /****************************************************************/
 
-#ifndef PELTIERTHOMSONEFFECTEXPLICIT_H
-#define PELTIERTHOMSONEFFECTEXPLICIT_H
+#ifndef AIR_H
+#define AIR_H
 
-#include "Kernel.h"
+#include "Material.h"
 
-class PeltierThomsonEffectExplicit;
+//Forward Declarations
+class air;
 
 template<>
-InputParameters validParams<PeltierThomsonEffectExplicit>();
+InputParameters validParams<air>();
 
-class PeltierThomsonEffectExplicit : public Kernel
+class air : public Material
 {
 public:
-  PeltierThomsonEffectExplicit(const InputParameters & parameters);
+  air(const InputParameters & parameters);
 
 protected:
-  virtual Real computeQpResidual();
-  virtual Real computeQpJacobian();
-  virtual Real computeQpOffDiagJacobian(unsigned jvar);
+  virtual void computeQpProperties() override;
 
-  const VariableGradient & _grad_voltage;
-  unsigned _voltage_var;
-  const MaterialProperty<Real> & _sigma;
-  const VariableValue & _alpha;
-  const VariableValue & _grad_alpha_x;
-  const VariableValue & _grad_alpha_y;
-  const VariableValue & _grad_alpha_z;
-  unsigned _alpha_var;
-  unsigned _grad_alpha_x_var;
-  unsigned _grad_alpha_y_var;
-  unsigned _grad_alpha_z_var;
+private:
+  MaterialProperty<Real> & _sigma;
+  MaterialProperty<Real> & _lambda;
+  MaterialProperty<Real> & _alpha;
+  MaterialProperty<RealGradient> & _grad_alpha;
+  MaterialProperty<Real> & _d_alpha_d_T;
+
+  const VariableGradient & _zero_gradient;
 };
 
-#endif //PELTIERTHOMSONEFFECTEXPLICIT_H
+#endif //AIR_H

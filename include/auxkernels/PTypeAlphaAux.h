@@ -11,38 +11,26 @@
 /*                                                              */
 /*            See COPYRIGHT for full restrictions               */
 /****************************************************************/
+#ifndef PTYPEALPHAAUX_H
+#define PTYPEALPHAAUX_H
 
-#ifndef PELTIERTHOMSONEFFECTEXPLICIT_H
-#define PELTIERTHOMSONEFFECTEXPLICIT_H
+#include "AuxKernel.h"
 
-#include "Kernel.h"
+class PTypeAlphaAux;
 
-class PeltierThomsonEffectExplicit;
+template <>
+InputParameters validParams<PTypeAlphaAux>();
 
-template<>
-InputParameters validParams<PeltierThomsonEffectExplicit>();
-
-class PeltierThomsonEffectExplicit : public Kernel
+class PTypeAlphaAux : public AuxKernel
 {
 public:
-  PeltierThomsonEffectExplicit(const InputParameters & parameters);
+  PTypeAlphaAux(const InputParameters & parameters);
 
 protected:
-  virtual Real computeQpResidual();
-  virtual Real computeQpJacobian();
-  virtual Real computeQpOffDiagJacobian(unsigned jvar);
+  virtual Real computeValue();
 
-  const VariableGradient & _grad_voltage;
-  unsigned _voltage_var;
-  const MaterialProperty<Real> & _sigma;
-  const VariableValue & _alpha;
-  const VariableValue & _grad_alpha_x;
-  const VariableValue & _grad_alpha_y;
-  const VariableValue & _grad_alpha_z;
-  unsigned _alpha_var;
-  unsigned _grad_alpha_x_var;
-  unsigned _grad_alpha_y_var;
-  unsigned _grad_alpha_z_var;
+private:
+  const VariableValue & _temperature;
 };
 
-#endif //PELTIERTHOMSONEFFECTEXPLICIT_H
+#endif // PTYPEALPHAAUX_H

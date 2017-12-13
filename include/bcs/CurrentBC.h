@@ -12,37 +12,39 @@
 /*            See COPYRIGHT for full restrictions               */
 /****************************************************************/
 
-#ifndef PELTIERTHOMSONEFFECTEXPLICIT_H
-#define PELTIERTHOMSONEFFECTEXPLICIT_H
+#ifndef CURRENTBC_H
+#define CURRENTBC_H
 
-#include "Kernel.h"
+#include "IntegratedBC.h"
 
-class PeltierThomsonEffectExplicit;
+class CurrentBC;
 
 template<>
-InputParameters validParams<PeltierThomsonEffectExplicit>();
+InputParameters validParams<CurrentBC>();
 
-class PeltierThomsonEffectExplicit : public Kernel
+class CurrentBC : public IntegratedBC
 {
 public:
-  PeltierThomsonEffectExplicit(const InputParameters & parameters);
+
+  CurrentBC(const InputParameters & parameters);
 
 protected:
-  virtual Real computeQpResidual();
-  virtual Real computeQpJacobian();
-  virtual Real computeQpOffDiagJacobian(unsigned jvar);
 
-  const VariableGradient & _grad_voltage;
-  unsigned _voltage_var;
+  virtual Real computeQpResidual();
+
+  virtual Real computeQpJacobian();
+
+  virtual Real computeQpOffDiagJacobian(unsigned int jvar);
+
+private:
+
+  const Real _z_dim;
+  const Real _current;
+  const VariableGradient & _grad_temperature;
+  unsigned int _temperature_var;
   const MaterialProperty<Real> & _sigma;
-  const VariableValue & _alpha;
-  const VariableValue & _grad_alpha_x;
-  const VariableValue & _grad_alpha_y;
-  const VariableValue & _grad_alpha_z;
-  unsigned _alpha_var;
-  unsigned _grad_alpha_x_var;
-  unsigned _grad_alpha_y_var;
-  unsigned _grad_alpha_z_var;
+  const MaterialProperty<Real> & _alpha;
+
 };
 
-#endif //PELTIERTHOMSONEFFECTEXPLICIT_H
+#endif //CURRENTBC_H

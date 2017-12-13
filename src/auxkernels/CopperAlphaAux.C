@@ -11,41 +11,22 @@
 /*                                                              */
 /*            See COPYRIGHT for full restrictions               */
 /****************************************************************/
+#include "CopperAlphaAux.h"
 
-#include "copper.h"
-
-template<>
-InputParameters validParams<copper>()
+template <>
+InputParameters
+validParams<CopperAlphaAux>()
 {
-  InputParameters params = validParams<Material>();
-
+  InputParameters params = validParams<AuxKernel>();
   return params;
 }
 
-copper::copper(const InputParameters & parameters) :
-    Material(parameters),
-
-    _sigma(declareProperty<Real>("sigma")),
-    _lambda(declareProperty<Real>("lambda")),
-    _alpha(declareProperty<Real>("alpha")),
-    _grad_alpha(declareProperty<RealGradient>("grad_alpha")),
-    _d_alpha_d_T(declareProperty<Real>("d_alpha_d_T")),
-
-    _zero_gradient(_grad_zero)
-
-{}
-
-void
-copper::computeQpProperties()
+CopperAlphaAux::CopperAlphaAux(const InputParameters & parameters)
+  : AuxKernel(parameters)
 {
-  Real rho = 1.7e-08;
-  _sigma[_qp] = 1.0 / rho;
+}
 
-  _lambda[_qp] = 400.0;
-
-  _alpha[_qp] = 6.5e-06;
-
-  _grad_alpha[_qp] = _zero_gradient[_qp];
-
-  _d_alpha_d_T[_qp] = 0.0;
+Real CopperAlphaAux::computeValue()
+{
+  return 6.5e-06;
 }

@@ -12,17 +12,17 @@
 /*            See COPYRIGHT for full restrictions               */
 /****************************************************************/
 
-#include "copper.h"
+#include "air.h"
 
 template<>
-InputParameters validParams<copper>()
+InputParameters validParams<air>()
 {
   InputParameters params = validParams<Material>();
 
   return params;
 }
 
-copper::copper(const InputParameters & parameters) :
+air::air(const InputParameters & parameters) :
     Material(parameters),
 
     _sigma(declareProperty<Real>("sigma")),
@@ -36,14 +36,13 @@ copper::copper(const InputParameters & parameters) :
 {}
 
 void
-copper::computeQpProperties()
+air::computeQpProperties()
 {
-  Real rho = 1.7e-08;
-  _sigma[_qp] = 1.0 / rho;
+  _sigma[_qp] = 0.0;
 
-  _lambda[_qp] = 400.0;
+  _lambda[_qp] = 0.0262;
 
-  _alpha[_qp] = 6.5e-06;
+  _alpha[_qp] = 0.0;
 
   _grad_alpha[_qp] = _zero_gradient[_qp];
 

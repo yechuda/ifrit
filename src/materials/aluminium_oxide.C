@@ -12,17 +12,17 @@
 /*            See COPYRIGHT for full restrictions               */
 /****************************************************************/
 
-#include "copper.h"
+#include "aluminium_oxide.h"
 
 template<>
-InputParameters validParams<copper>()
+InputParameters validParams<aluminium_oxide>()
 {
   InputParameters params = validParams<Material>();
 
   return params;
 }
 
-copper::copper(const InputParameters & parameters) :
+aluminium_oxide::aluminium_oxide(const InputParameters & parameters) :
     Material(parameters),
 
     _sigma(declareProperty<Real>("sigma")),
@@ -36,14 +36,13 @@ copper::copper(const InputParameters & parameters) :
 {}
 
 void
-copper::computeQpProperties()
+aluminium_oxide::computeQpProperties()
 {
-  Real rho = 1.7e-08;
-  _sigma[_qp] = 1.0 / rho;
+  _sigma[_qp] = 0.0;
 
-  _lambda[_qp] = 400.0;
+  _lambda[_qp] = 30.0;
 
-  _alpha[_qp] = 6.5e-06;
+  _alpha[_qp] = 0.0;
 
   _grad_alpha[_qp] = _zero_gradient[_qp];
 

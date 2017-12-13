@@ -12,13 +12,21 @@
 #include "PeltierThomsonEffectExplicit.h"
 #include "JouleHeating.h"
 
+// BCs
+#include "CurrentBC.h"
+
 // AuxKernels
 #include "HeatFluxAux.h"
+#include "NTypeAlphaAux.h"
+#include "PTypeAlphaAux.h"
+#include "CopperAlphaAux.h"
 
 // Materials
 #include "p_type.h"
 #include "n_type.h"
 #include "copper.h"
+#include "air.h"
+#include "aluminium_oxide.h"
 
 // Postprocessors
 #include "CurrentPostprocessor.h"
@@ -68,13 +76,21 @@ IfritApp::registerObjects(Factory & factory)
   registerKernel(JouleHeating);
   registerKernel(PeltierThomsonEffectExplicit);
 
+  //BCs
+  registerBoundaryCondition(CurrentBC);
+
   // AuxKernels
   registerAux(HeatFluxAux);
+  registerAux(NTypeAlphaAux);
+  registerAux(PTypeAlphaAux);
+  registerAux(CopperAlphaAux);
 
   // Materials
   registerMaterial(p_type);
   registerMaterial(n_type);
   registerMaterial(copper);
+  registerMaterial(air);
+  registerMaterial(aluminium_oxide);
 
   // Postprocessors
   registerPostprocessor(CurrentPostprocessor);
