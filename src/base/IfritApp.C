@@ -7,19 +7,13 @@
 // Kernels
 #include "ElectricalConduction.h"
 #include "SeebeckEffect.h"
-#include "HeatDiffusion.h"
-#include "PeltierThomsonEffect.h"
-#include "PeltierThomsonEffectExplicit.h"
-#include "JouleHeating.h"
+#include "HeatTransfer.h"
 
 // BCs
 #include "CurrentBC.h"
 
 // AuxKernels
 #include "HeatFluxAux.h"
-#include "NTypeAlphaAux.h"
-#include "PTypeAlphaAux.h"
-#include "CopperAlphaAux.h"
 
 // Materials
 #include "p_type.h"
@@ -31,6 +25,8 @@
 // Postprocessors
 #include "CurrentPostprocessor.h"
 #include "HeatFluxPostprocessor.h"
+#include "ElectricPowerPostprocessor.h"
+#include "BalanceDeltaPostprocessor.h"
 
 template<>
 InputParameters validParams<IfritApp>()
@@ -71,19 +67,13 @@ IfritApp::registerObjects(Factory & factory)
   // Kernels
   registerKernel(ElectricalConduction);
   registerKernel(SeebeckEffect);
-  registerKernel(HeatDiffusion);
-  registerKernel(PeltierThomsonEffect);
-  registerKernel(JouleHeating);
-  registerKernel(PeltierThomsonEffectExplicit);
+  registerKernel(HeatTransfer);
 
   //BCs
   registerBoundaryCondition(CurrentBC);
 
   // AuxKernels
   registerAux(HeatFluxAux);
-  registerAux(NTypeAlphaAux);
-  registerAux(PTypeAlphaAux);
-  registerAux(CopperAlphaAux);
 
   // Materials
   registerMaterial(p_type);
@@ -95,6 +85,8 @@ IfritApp::registerObjects(Factory & factory)
   // Postprocessors
   registerPostprocessor(CurrentPostprocessor);
   registerPostprocessor(HeatFluxPostprocessor);
+  registerPostprocessor(ElectricPowerPostprocessor);
+  registerPostprocessor(BalanceDeltaPostprocessor);
 }
 
 // External entry point for dynamic syntax association
