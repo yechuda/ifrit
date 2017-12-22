@@ -35,10 +35,6 @@ private:
   MaterialProperty<Real> & _sigma;
   MaterialProperty<Real> & _lambda;
   MaterialProperty<Real> & _alpha;
-  MaterialProperty<RealGradient> & _grad_alpha;
-  MaterialProperty<Real> & _d_alpha_d_T;
-
-  const VariableGradient & _zero_gradient;
 };
 
 #endif //ALUMINIUM_OXIDE_H

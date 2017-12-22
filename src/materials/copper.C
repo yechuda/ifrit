@@ -27,12 +27,7 @@ copper::copper(const InputParameters & parameters) :
 
     _sigma(declareProperty<Real>("sigma")),
     _lambda(declareProperty<Real>("lambda")),
-    _alpha(declareProperty<Real>("alpha")),
-    _grad_alpha(declareProperty<RealGradient>("grad_alpha")),
-    _d_alpha_d_T(declareProperty<Real>("d_alpha_d_T")),
-
-    _zero_gradient(_grad_zero)
-
+    _alpha(declareProperty<Real>("alpha"))
 {}
 
 void
@@ -44,8 +39,4 @@ copper::computeQpProperties()
   _lambda[_qp] = 400.0;
 
   _alpha[_qp] = 6.5e-06;
-
-  _grad_alpha[_qp] = _zero_gradient[_qp];
-
-  _d_alpha_d_T[_qp] = 0.0;
 }

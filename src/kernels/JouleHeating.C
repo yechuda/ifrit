@@ -35,24 +35,22 @@ JouleHeating::JouleHeating(const InputParameters & parameters) :
 Real
 JouleHeating::computeQpResidual()
 {
-  return _sigma[_qp] * _grad_voltage[_qp] * _grad_voltage[_qp] * _test[_i][_qp] +
-         2.0 * _sigma[_qp] * _alpha[_qp] * _grad_voltage[_qp] * _grad_u[_qp] * _test[_i][_qp] +
-         _sigma[_qp] * _alpha[_qp] * _alpha[_qp] * _grad_u[_qp] * _grad_u[_qp] * _test[_i][_qp];
+  return -_sigma[_qp] * _alpha[_qp] * _grad_u[_qp] * _grad_voltage[_qp] * _test[_i][_qp] -
+          _sigma[_qp] * _grad_voltage[_qp] * _grad_voltage[_qp] * _test[_i][_qp];
 }
 
 Real
 JouleHeating::computeQpJacobian()
 {
-  return 2.0 * _sigma[_qp] * _alpha[_qp] * _grad_voltage[_qp] * _grad_phi[_j][_qp] * _test[_i][_qp] +
-         2.0 * _sigma[_qp] * _alpha[_qp] * _alpha[_qp] * _grad_u[_qp] * _grad_phi[_j][_qp] * _test[_i][_qp];
+  return -_sigma[_qp] * _alpha[_qp] * _grad_phi[_j][_qp] * _grad_voltage[_qp] * _test[_i][_qp];
 }
 
 Real
 JouleHeating::computeQpOffDiagJacobian(unsigned jvar)
 {
   if (jvar == _voltage_var)
-    return 2.0 * _sigma[_qp] * _grad_voltage[_qp] * _grad_phi[_j][_qp] * _test[_i][_qp] +
-           2.0 * _sigma[_qp] * _alpha[_qp] * _grad_phi[_j][_qp] * _grad_u[_qp] * _test[_i][_qp];
+    return -_sigma[_qp] * _alpha[_qp] * _grad_u[_qp] * _grad_phi[_j][_qp] * _test[_i][_qp] -
+            2.0 * _sigma[_qp] * _grad_voltage[_qp] * _grad_phi[_j][_qp] * _test[_i][_qp];
   else
     return 0.0;
 }

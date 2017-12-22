@@ -12,39 +12,30 @@
 /*            See COPYRIGHT for full restrictions               */
 /****************************************************************/
 
-#ifndef CURRENTBC_H
-#define CURRENTBC_H
-
-#include "IntegratedBC.h"
-
-class CurrentBC;
+#include "HeatDiffusion.h"
 
 template<>
-InputParameters validParams<CurrentBC>();
-
-class CurrentBC : public IntegratedBC
+InputParameters validParams<HeatDiffusion>()
 {
-public:
+  InputParameters params = validParams<Kernel>();
+  return params;
+}
 
-  CurrentBC(const InputParameters & parameters);
+HeatDiffusion::HeatDiffusion(const InputParameters & parameters) :
+    Kernel(parameters),
 
-protected:
+    _lambda(getMaterialProperty<Real>("lambda"))
+{
+}
 
-  virtual Real computeQpResidual();
+Real
+HeatDiffusion::computeQpResidual()
+{
+  return _lambda[_qp] * _grad_u[_qp] * _grad_test[_i][_qp];
+}
 
-  virtual Real computeQpJacobian();
-
-  virtual Real computeQpOffDiagJacobian(unsigned int jvar);
-
-private:
-
-  const Real _z_dim;
-  const Real _current;
-  const VariableGradient & _grad_temperature;
-  unsigned int _temperature_var;
-  const MaterialProperty<Real> & _sigma;
-  const MaterialProperty<Real> & _alpha;
-
-};
-
-#endif //CURRENTBC_H
+Real
+HeatDiffusion::computeQpJacobian()
+{
+  return _lambda[_qp] * _grad_phi[_j][_qp] * _grad_test[_i][_qp];
+}

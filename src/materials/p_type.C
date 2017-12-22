@@ -30,11 +30,8 @@ p_type::p_type(const InputParameters & parameters) :
     _sigma(declareProperty<Real>("sigma")),
     _lambda(declareProperty<Real>("lambda")),
     _alpha(declareProperty<Real>("alpha")),
-    _grad_alpha(declareProperty<RealGradient>("grad_alpha")),
-    _d_alpha_d_T(declareProperty<Real>("d_alpha_d_T")),
 
-    _temperature(coupledValue("temperature")),
-    _grad_temperature(coupledGradient("temperature"))
+    _temperature(coupledValue("temperature"))
 {}
 
 void
@@ -57,8 +54,4 @@ p_type::computeQpProperties()
   Real C1 = 1.55e-03;
   Real C2 = -3.15e-06;
   _alpha[_qp] = alpha0 * (1.0 + C1 * (_temperature[_qp] - T0) + C2 * std::pow(_temperature[_qp] - T0, 2.0));
-
-  _grad_alpha[_qp] = (alpha0 * C1 + 2.0 * alpha0 * C2 * (_temperature[_qp] - T0)) * _grad_temperature[_qp];
-
-  _d_alpha_d_T[_qp] = alpha0 * C1 + 2.0 * alpha0 * C2 * (_temperature[_qp] - T0);
 }

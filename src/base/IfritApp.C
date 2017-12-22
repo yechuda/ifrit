@@ -7,13 +7,9 @@
 // Kernels
 #include "ElectricalConduction.h"
 #include "SeebeckEffect.h"
-#include "HeatTransfer.h"
-
-// BCs
-#include "CurrentBC.h"
-
-// AuxKernels
-#include "HeatFluxAux.h"
+#include "HeatDiffusion.h"
+#include "PeltierThomsonEffect.h"
+#include "JouleHeating.h"
 
 // Materials
 #include "p_type.h"
@@ -67,13 +63,9 @@ IfritApp::registerObjects(Factory & factory)
   // Kernels
   registerKernel(ElectricalConduction);
   registerKernel(SeebeckEffect);
-  registerKernel(HeatTransfer);
-
-  //BCs
-  registerBoundaryCondition(CurrentBC);
-
-  // AuxKernels
-  registerAux(HeatFluxAux);
+  registerKernel(HeatDiffusion);
+  registerKernel(PeltierThomsonEffect);
+  registerKernel(JouleHeating);
 
   // Materials
   registerMaterial(p_type);

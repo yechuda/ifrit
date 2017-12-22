@@ -11,28 +11,31 @@
 /*                                                              */
 /*            See COPYRIGHT for full restrictions               */
 /****************************************************************/
-#include "PTypeAlphaAux.h"
 
-template <>
-InputParameters
-validParams<PTypeAlphaAux>()
-{
-  InputParameters params = validParams<AuxKernel>();
-  params.addRequiredCoupledVar("temperature", "Temperature variable.");
-  return params;
-}
+#ifndef PELTIERTHOMSONEFFECT_H
+#define PELTIERTHOMSONEFFECT_H
 
-PTypeAlphaAux::PTypeAlphaAux(const InputParameters & parameters)
-  : AuxKernel(parameters),
-    _temperature(coupledValue("temperature"))
-{
-}
+#include "Kernel.h"
 
-Real PTypeAlphaAux::computeValue()
+class PeltierThomsonEffect;
+
+template<>
+InputParameters validParams<PeltierThomsonEffect>();
+
+class PeltierThomsonEffect : public Kernel
 {
-  Real T0 = 300.0;
-  Real alpha0 = 2.207e-04;
-  Real C1 = 1.55e-03;
-  Real C2 = -3.15e-06;
-  return alpha0 * (1.0 + C1 * (_temperature[_qp] - T0) + C2 * std::pow(_temperature[_qp] - T0, 2.0));
-}
+public:
+  PeltierThomsonEffect(const InputParameters & parameters);
+
+protected:
+  virtual Real computeQpResidual();
+  virtual Real computeQpJacobian();
+  virtual Real computeQpOffDiagJacobian(unsigned jvar);
+
+  const VariableGradient & _grad_voltage;
+  unsigned _voltage_var;
+  const MaterialProperty<Real> & _sigma;
+  const MaterialProperty<Real> & _alpha;
+};
+
+#endif //PELTIERTHOMSONEFFECT_H

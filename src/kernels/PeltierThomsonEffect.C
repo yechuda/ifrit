@@ -28,31 +28,30 @@ PeltierThomsonEffect::PeltierThomsonEffect(const InputParameters & parameters) :
     _grad_voltage(coupledGradient("voltage")),
     _voltage_var(coupled("voltage")),
     _sigma(getMaterialProperty<Real>("sigma")),
-    _alpha(getMaterialProperty<Real>("alpha")),
-    _grad_alpha(getMaterialProperty<RealGradient>("grad_alpha"))
+    _alpha(getMaterialProperty<Real>("alpha"))
 {
 }
 
 Real
 PeltierThomsonEffect::computeQpResidual()
 {
-  return _sigma[_qp] * _u[_qp] * _grad_voltage[_qp] * _grad_alpha[_qp] * _test[_i][_qp] +
-         _sigma[_qp] * _alpha[_qp] * _u[_qp] * _grad_u[_qp] * _grad_alpha[_qp] * _test[_i][_qp];
+  return _sigma[_qp] * _alpha[_qp] * _u[_qp] * _grad_voltage[_qp] * _grad_test[_i][_qp] +
+         _sigma[_qp] * std::pow(_alpha[_qp], 2.0) * _u[_qp] * _grad_u[_qp] * _grad_test[_i][_qp];
 }
 
 Real
 PeltierThomsonEffect::computeQpJacobian()
 {
-  return _sigma[_qp] * _phi[_j][_qp] * _grad_voltage[_qp] * _grad_alpha[_qp] * _test[_i][_qp] +
-         _sigma[_qp] * _alpha[_qp] * _phi[_j][_qp] * _grad_u[_qp] * _grad_alpha[_qp] * _test[_i][_qp] +
-         _sigma[_qp] * _alpha[_qp] * _u[_qp] * _grad_phi[_j][_qp] * _grad_alpha[_qp] * _test[_i][_qp];
+  return _sigma[_qp] * _alpha[_qp] * _phi[_j][_qp] * _grad_voltage[_qp] * _grad_test[_i][_qp] +
+         _sigma[_qp] * std::pow(_alpha[_qp], 2.0) * _phi[_j][_qp] * _grad_u[_qp] * _grad_test[_i][_qp] +
+         _sigma[_qp] * std::pow(_alpha[_qp], 2.0) * _u[_qp] * _grad_phi[_j][_qp] * _grad_test[_i][_qp];
 }
 
 Real
 PeltierThomsonEffect::computeQpOffDiagJacobian(unsigned jvar)
 {
   if (jvar == _voltage_var)
-    return _sigma[_qp] * _u[_qp] * _grad_phi[_j][_qp] * _grad_alpha[_qp] * _test[_i][_qp];
+    return _sigma[_qp] * _alpha[_qp] * _u[_qp] * _grad_phi[_j][_qp] * _grad_test[_i][_qp];
   else
     return 0.0;
 }
