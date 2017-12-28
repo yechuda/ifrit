@@ -11,6 +11,9 @@
 #include "PeltierThomsonEffect.h"
 #include "JouleHeating.h"
 
+// BCs
+#include "CurrentBC.h"
+
 // Materials
 #include "p_type.h"
 #include "n_type.h"
@@ -66,6 +69,9 @@ IfritApp::registerObjects(Factory & factory)
   registerKernel(HeatDiffusion);
   registerKernel(PeltierThomsonEffect);
   registerKernel(JouleHeating);
+
+  // BCs
+  registerBoundaryCondition(CurrentBC);
 
   // Materials
   registerMaterial(p_type);

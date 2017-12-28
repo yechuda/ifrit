@@ -11,29 +11,34 @@
 /*                                                              */
 /*            See COPYRIGHT for full restrictions               */
 /****************************************************************/
-#ifndef ELECTRICPOWERPOSTPROCESSOR_H
-#define ELECTRICPOWERPOSTPROCESSOR_H
 
-#include "GeneralPostprocessor.h"
+#ifndef CURRENTBC_H
+#define CURRENTBC_H
 
-class ElectricPowerPostprocessor;
+#include "IntegratedBC.h"
+
+class CurrentBC;
 
 template <>
-InputParameters validParams<ElectricPowerPostprocessor>();
+InputParameters validParams<CurrentBC>();
 
-class ElectricPowerPostprocessor : public GeneralPostprocessor
+class CurrentBC : public IntegratedBC
 {
 public:
-  ElectricPowerPostprocessor(const InputParameters & parameters);
-
-  virtual void initialize() override;
-  virtual void execute() override;
-  virtual PostprocessorValue getValue() override;
+  CurrentBC(const InputParameters & parameters);
 
 protected:
-  const Real _pair_number;
-  const PostprocessorValue & _voltage_drop;
-  const PostprocessorValue & _current;
+  virtual Real computeQpResidual() override;
+  virtual Real computeQpJacobian();
+  virtual Real computeQpOffDiagJacobian(unsigned int jvar);
+
+  const Real _z_dim;
+  const Real _length;
+  const Real _current;
+  const VariableGradient & _grad_temperature;
+  unsigned int _temperature_var;
+  const MaterialProperty<Real> & _sigma;
+  const MaterialProperty<Real> & _alpha;
 };
 
-#endif /* ELECTRICPOWERPOSTPROCESSOR_H */
+#endif // CURRENTBC_H

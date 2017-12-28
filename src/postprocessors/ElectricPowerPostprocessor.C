@@ -11,32 +11,40 @@
 /*                                                              */
 /*            See COPYRIGHT for full restrictions               */
 /****************************************************************/
-
 #include "ElectricPowerPostprocessor.h"
 
-template<>
-InputParameters validParams<ElectricPowerPostprocessor>()
+template <>
+InputParameters
+validParams<ElectricPowerPostprocessor>()
 {
-  InputParameters params = validParams<SideIntegralVariablePostprocessor>();
-  params.addRequiredParam<Real>("z_dim", "Perpendicular dimension.");
-  params.addRequiredParam<Real>("voltage_drop", "The value of voltage drop on single TE pair.");
+  InputParameters params = validParams<GeneralPostprocessor>();
   params.addRequiredParam<Real>("pair_number", "The number of thermoelectric pairs in TE module.");
-  params.addRequiredCoupledVar("temperature", "The coupled variable of temperature");
+  params.addRequiredParam<PostprocessorName>("voltage_drop", "The name of the postprocessor that calculates voltage drop.");
+  params.addRequiredParam<PostprocessorName>("current", "The name of the postprocessor that calculates electric current.");
+
   return params;
 }
 
-ElectricPowerPostprocessor::ElectricPowerPostprocessor(const InputParameters & parameters) :
-    SideIntegralVariablePostprocessor(parameters),
-    _z_dim(getParam<Real>("z_dim")),
-    _voltage_drop(getParam<Real>("voltage_drop")),
+ElectricPowerPostprocessor::ElectricPowerPostprocessor(const InputParameters & parameters)
+  : GeneralPostprocessor(parameters),
     _pair_number(getParam<Real>("pair_number")),
-    _grad_temperature(coupledGradient("temperature")),
-    _sigma(getMaterialProperty<Real>("sigma")),
-    _alpha(getMaterialProperty<Real>("alpha"))
-{}
-
-Real
-ElectricPowerPostprocessor::computeQpIntegral()
+    _voltage_drop(getPostprocessorValue("voltage_drop")),
+    _current(getPostprocessorValue("current"))
 {
-  return _pair_number * _voltage_drop * std::abs(_z_dim * _sigma[_qp] * (_grad_u[_qp] + _alpha[_qp] * _grad_temperature[_qp]) * _normals[_qp]);
+}
+
+void
+ElectricPowerPostprocessor::initialize()
+{
+}
+
+void
+ElectricPowerPostprocessor::execute()
+{
+}
+
+PostprocessorValue
+ElectricPowerPostprocessor::getValue()
+{
+  return _pair_number * _voltage_drop * std::abs(_current);
 }
