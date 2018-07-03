@@ -20,6 +20,8 @@
 #include "copper.h"
 #include "air.h"
 #include "aluminium_oxide.h"
+#include "p_type_fit.h"
+#include "n_type_fit.h"
 
 // Postprocessors
 #include "CurrentPostprocessor.h"
@@ -79,6 +81,8 @@ IfritApp::registerObjects(Factory & factory)
   registerMaterial(copper);
   registerMaterial(air);
   registerMaterial(aluminium_oxide);
+  registerMaterial(p_type_fit);
+  registerMaterial(n_type_fit);
 
   // Postprocessors
   registerPostprocessor(CurrentPostprocessor);
