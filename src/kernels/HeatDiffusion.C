@@ -13,6 +13,7 @@
 /****************************************************************/
 
 #include "HeatDiffusion.h"
+registerMooseObject("IfritApp", HeatDiffusion);
 
 template<>
 InputParameters validParams<HeatDiffusion>()

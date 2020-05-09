@@ -12,6 +12,7 @@
 /*            See COPYRIGHT for full restrictions               */
 /****************************************************************/
 #include "ElectricPowerPostprocessor.h"
+registerMooseObject("IfritApp", ElectricPowerPostprocessor);
 
 template <>
 InputParameters

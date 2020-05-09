@@ -13,6 +13,7 @@
 /****************************************************************/
 
 #include "CurrentPostprocessor.h"
+registerMooseObject("IfritApp", CurrentPostprocessor);
 
 template<>
 InputParameters validParams<CurrentPostprocessor>()

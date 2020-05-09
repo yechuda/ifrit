@@ -13,6 +13,7 @@
 /****************************************************************/
 
 #include "ElectricalConduction.h"
+registerMooseObject("IfritApp", ElectricalConduction);
 
 template<>
 InputParameters validParams<ElectricalConduction>()

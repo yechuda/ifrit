@@ -13,6 +13,7 @@
 /****************************************************************/
 
 #include "n_type_fit.h"
+registerMooseObject("IfritApp", n_type_fit);
 
 template<>
 InputParameters validParams<n_type_fit>()

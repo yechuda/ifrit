@@ -13,6 +13,7 @@
 /****************************************************************/
 
 #include "air.h"
+registerMooseObject("IfritApp", air);
 
 template<>
 InputParameters validParams<air>()

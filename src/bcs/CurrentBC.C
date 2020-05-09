@@ -13,6 +13,7 @@
 /****************************************************************/
 
 #include "CurrentBC.h"
+registerMooseObject("IfritApp", CurrentBC);
 
 template <>
 InputParameters

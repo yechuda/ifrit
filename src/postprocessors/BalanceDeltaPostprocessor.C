@@ -12,6 +12,7 @@
 /*            See COPYRIGHT for full restrictions               */
 /****************************************************************/
 #include "BalanceDeltaPostprocessor.h"
+registerMooseObject("IfritApp", BalanceDeltaPostprocessor);
 
 template <>
 InputParameters

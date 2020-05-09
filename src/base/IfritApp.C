@@ -1,8 +1,11 @@
 #include "IfritApp.h"
-#include "Moose.h"
+#include "Factory.h"
+#include "ActionFactory.h"
 #include "AppFactory.h"
-#include "ModulesApp.h"
 #include "MooseSyntax.h"
+
+// #include "Moose.h"
+// #include "ModulesApp.h"
 
 // Kernels
 #include "ElectricalConduction.h"
@@ -29,71 +32,54 @@
 #include "ElectricPowerPostprocessor.h"
 #include "BalanceDeltaPostprocessor.h"
 
-template<>
-InputParameters validParams<IfritApp>()
+InputParameters
+IfritApp::validParams()
 {
-  InputParameters params = validParams<MooseApp>();
+  InputParameters params = MooseApp::validParams();
+
+  params.set<bool>("automatic_automatic_scaling") = false;
+
+  // Do not use legacy DirichletBC, that is, set DirichletBC default for preset = true
+  params.set<bool>("use_legacy_dirichlet_bc") = false;
+
   return params;
 }
 
-IfritApp::IfritApp(InputParameters parameters) :
-    MooseApp(parameters)
-{
-  Moose::registerObjects(_factory);
-  ModulesApp::registerObjects(_factory);
-  IfritApp::registerObjects(_factory);
+registerKnownLabel("IfritApp");
 
-  Moose::associateSyntax(_syntax, _action_factory);
-  ModulesApp::associateSyntax(_syntax, _action_factory);
-  IfritApp::associateSyntax(_syntax, _action_factory);
+IfritApp::IfritApp(const InputParameters & parameters) : MooseApp(parameters)
+{
+  IfritApp::registerAll(_factory, _action_factory, _syntax);
 }
 
 IfritApp::~IfritApp()
 {
 }
 
-// External entry point for dynamic application loading
-extern "C" void IfritApp__registerApps() { IfritApp::registerApps(); }
 void
 IfritApp::registerApps()
 {
   registerApp(IfritApp);
 }
 
-// External entry point for dynamic object registration
-extern "C" void IfritApp__registerObjects(Factory & factory) { IfritApp::registerObjects(factory); }
 void
-IfritApp::registerObjects(Factory & factory)
+IfritApp::registerAll(Factory & f, ActionFactory & af, Syntax & s)
 {
-  // Kernels
-  registerKernel(ElectricalConduction);
-  registerKernel(SeebeckEffect);
-  registerKernel(HeatDiffusion);
-  registerKernel(PeltierThomsonEffect);
-  registerKernel(JouleHeating);
-
-  // BCs
-  registerBoundaryCondition(CurrentBC);
-
-  // Materials
-  registerMaterial(p_type);
-  registerMaterial(n_type);
-  registerMaterial(copper);
-  registerMaterial(air);
-  registerMaterial(aluminium_oxide);
-  registerMaterial(p_type_fit);
-  registerMaterial(n_type_fit);
-
-  // Postprocessors
-  registerPostprocessor(CurrentPostprocessor);
-  registerPostprocessor(HeatFluxPostprocessor);
-  registerPostprocessor(ElectricPowerPostprocessor);
-  registerPostprocessor(BalanceDeltaPostprocessor);
+  Registry::registerObjectsTo(f, {"IfritApp"});
+  Registry::registerActionsTo(af, {"IfritApp"});
 }
 
-// External entry point for dynamic syntax association
-extern "C" void IfritApp__associateSyntax(Syntax & syntax, ActionFactory & action_factory) { IfritApp::associateSyntax(syntax, action_factory); }
-void
-IfritApp::associateSyntax(Syntax & /*syntax*/, ActionFactory & /*action_factory*/)
+/***************************************************************************************************
+ *********************** Dynamic Library Entry Points - DO NOT MODIFY ******************************
+ **************************************************************************************************/
+extern "C" void
+IfritApp__registerAll(Factory & f, ActionFactory & af, Syntax & s)
 {
+  IfritApp::registerAll(f, af, s);
+}
+
+extern "C" void
+IfritApp__registerApps()
+{
+  IfritApp::registerApps();
 }

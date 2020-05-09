@@ -13,6 +13,7 @@
 /****************************************************************/
 
 #include "aluminium_oxide.h"
+registerMooseObject("IfritApp", aluminium_oxide);
 
 template<>
 InputParameters validParams<aluminium_oxide>()

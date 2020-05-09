@@ -13,6 +13,7 @@
 /****************************************************************/
 
 #include "JouleHeating.h"
+registerMooseObject("IfritApp", JouleHeating);
 
 template<>
 InputParameters validParams<JouleHeating>()

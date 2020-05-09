@@ -13,6 +13,7 @@
 /****************************************************************/
 
 #include "SeebeckEffect.h"
+registerMooseObject("IfritApp", SeebeckEffect);
 
 template<>
 InputParameters validParams<SeebeckEffect>()

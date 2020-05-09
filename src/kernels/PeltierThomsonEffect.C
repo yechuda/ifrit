@@ -13,6 +13,7 @@
 /****************************************************************/
 
 #include "PeltierThomsonEffect.h"
+registerMooseObject("IfritApp", PeltierThomsonEffect);
 
 template<>
 InputParameters validParams<PeltierThomsonEffect>()

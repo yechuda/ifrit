@@ -13,6 +13,7 @@
 /****************************************************************/
 
 #include "HeatFluxPostprocessor.h"
+registerMooseObject("IfritApp", HeatFluxPostprocessor);
 
 template <>
 InputParameters

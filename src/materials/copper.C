@@ -13,6 +13,7 @@
 /****************************************************************/
 
 #include "copper.h"
+registerMooseObject("IfritApp", copper);
 
 template<>
 InputParameters validParams<copper>()
